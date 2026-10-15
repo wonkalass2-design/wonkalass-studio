@@ -1,207 +1,22 @@
-<!DOCTYPE html>
-<html lang="id" class="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WONK ALASS STUDIO v1.5 - Commercial AI Prompt Studio</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#ecfdf5',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857'
-            }
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased flex flex-col justify-between">
+// Daftar Kode Lisensi Unik Pembeli
+const VALID_LICENSES = [
+  "WONK-BUYER01",
+  "WONK-BUYER02",
+  "WONK-BUYER03",
+  "WONK-BUYER04",
+  "WONK-BUYER05",
+  "WONKALASS2026",
+  "WONK-OKTOBER"
+];
 
-  <!-- HEADER -->
-  <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-emerald-500/20">
-          WA
-        </div>
-        <div>
-          <h1 class="font-bold text-lg leading-tight text-white">WONK ALASS STUDIO <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">v1.5</span></h1>
-          <p class="text-xs text-slate-400">By. tangituru</p>
-        </div>
-      </div>
-      <div id="licenseBadge" class="hidden text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center space-x-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span id="activeLicenseText">Lisensi Aktif</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-4xl mx-auto w-full px-4 py-8 flex-1 flex flex-col justify-center">
-
-    <!-- LOGIN / MODAL LISENSI -->
-    <div id="loginSection" class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
-      <div class="text-center max-w-md mx-auto mb-8">
-        <div class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
-          <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 0121 9z"/>
-          </svg>
-        </div>
-        <h2 class="text-2xl font-bold text-white mb-2">Aktivasi Lisensi Pembeli</h2>
-        <p class="text-sm text-slate-400">Masukkan kode lisensi unik yang Anda dapatkan dari Admin via WhatsApp setelah pembelian.</p>
-      </div>
-
-      <div class="max-w-md mx-auto space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Kode Lisensi</label>
-          <input type="text" id="licenseInput" placeholder="Contoh: WONK-BUYER01" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 tracking-widest uppercase font-mono text-center text-lg transition">
-        </div>
-
-        <div id="errorMessage" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3 text-center">
-          Kode lisensi tidak valid atau telah kedaluwarsa.
-        </div>
-
-        <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-500/20 transition transform active:scale-[0.99]">
-          Masuk Studio
-        </button>
-
-        <div class="pt-4 border-t border-slate-700/50 text-center">
-          <p class="text-xs text-slate-400 mb-2">Belum punya kode lisensi atau bermasalah?</p>
-          <a href="https://wa.me/6285924588138?text=Halo%20Admin%20WONK%20ALASS%20STUDIO,%20saya%20ingin%20konfirmasi%20kode%20lisensi" target="_blank" class="inline-flex items-center space-x-2 text-xs text-emerald-400 hover:text-emerald-300 font-medium">
-            <span>Hubungi Admin via WhatsApp</span>
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- STUDIO MAIN CONTENT (TERSEMBUNYI SEBELUM LOGIN) -->
-    <div id="studioSection" class="hidden space-y-6">
-      <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl backdrop-blur-xl">
-        <h2 class="text-xl font-bold text-white mb-4 flex items-center space-x-2">
-          <span>✨ Studio Prompt Generator</span>
-        </h2>
-        
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Deskripsikan Ide / Proyek AI Anda</label>
-            <textarea id="promptInput" rows="4" placeholder="Contoh: Buatkan prompt untuk gambar pemandangan hutan dengan gaya cyberpunk berwarna neon..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition resize-none"></textarea>
-          </div>
-
-          <button onclick="generatePrompt()" id="generateBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 px-6 rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center space-x-2">
-            <span>Generate Prompt Komersial</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- RESULT AREA -->
-      <div id="resultBox" class="hidden bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl backdrop-blur-xl">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Hasil Prompt:</h3>
-          <button onclick="copyResult()" class="text-xs bg-slate-700 hover:bg-slate-600 text-emerald-400 px-3 py-1.5 rounded-lg border border-slate-600 transition flex items-center space-x-1">
-            <span>📋 Salin Prompt</span>
-          </button>
-        </div>
-        <div id="resultContent" class="bg-slate-900 border border-slate-700/80 rounded-xl p-4 text-slate-200 font-mono text-sm leading-relaxed whitespace-pre-wrap"></div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-    &copy; 2026 WONK ALASS STUDIO By. tangituru. All rights reserved.
-  </footer>
-
-  <!-- JAVASCRIPT VALIDASI & DAFTAR LISENSI -->
-  <script>
-    // ==========================================
-    // DAFTAR KODE LISENSI AKTIF UNTUK PEMBELI
-    // (Bisa Anda tambah/ubah kapan saja di sini)
-    // ==========================================
-    const VALID_LICENSES = [
-      "WONK-BUYER01",
-      "WONK-BUYER02",
-      "WONK-BUYER03",
-      "WONK-BUYER04",
-      "WONK-BUYER05",
-      "WONK-BUYER06",
-      "WONK-BUYER07",
-      "WONK-BUYER08",
-      "WONK-BUYER09",
-      "WONK-BUYER10",
-      "WONKALASS2026",
-      "WONK-OKTOBER"
-    ];
-
-    // Cek status login saat halaman dimuat
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedKey = localStorage.getItem('wonk_active_license');
-      if (savedKey && VALID_LICENSES.includes(savedKey)) {
-        showStudio(savedKey);
-      }
-    });
-
-    function handleLogin() {
-      const input = document.getElementById('licenseInput');
-      const userKey = input.value.trim().toUpperCase();
-      const errorMsg = document.getElementById('errorMessage');
-
-      if (VALID_LICENSES.includes(userKey)) {
-        errorMsg.classList.add('hidden');
-        localStorage.setItem('wonk_active_license', userKey);
-        showStudio(userKey);
-      } else {
-        errorMsg.classList.remove('hidden');
-      }
-    }
-
-    function showStudio(licenseKey) {
-      document.getElementById('loginSection').classList.add('hidden');
-      document.getElementById('studioSection').classList.remove('hidden');
-      document.getElementById('licenseBadge').classList.remove('hidden');
-      document.getElementById('activeLicenseText').innerText = 'Lisensi: ' + licenseKey;
-    }
-
-    function generatePrompt() {
-      const input = document.getElementById('promptInput').value.trim();
-      if (!input) return alert('Silakan masukkan deskripsi ide prompt terlebih dahulu!');
-
-      const btn = document.getElementById('generateBtn');
-      const resultBox = document.getElementById('resultBox');
-      const resultContent = document.getElementById('resultContent');
-
-      btn.disabled = true;
-      btn.innerText = 'Memproses Prompt...';
-
-      // Simulasi Hasil Prompt Studio
-      setTimeout(() => {
-        const generatedText = `[HIGH-QUALITY COMMERCIAL PROMPT]\n\n"Subject: ${input}. Style: Highly detailed 8k resolution, cinematic lighting, photorealistic commercial aesthetics, ultra-sharp focus, professional color grading --ar 16:9 --v 6.0"`;
-        
-        resultContent.innerText = generatedText;
-        resultBox.classList.remove('hidden');
-        
-        btn.disabled = false;
-        btn.innerText = 'Generate Prompt Komersial';
-      }, 1000);
-    }
-
-    function copyResult() {
-      const text = document.getElementById('resultContent').innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Prompt berhasil disalin!');
-      });
-    }
-  </script>
-</body>
-</html>
+// Pengecekan saat tombol login diklik
+function checkLicense(inputCode) {
+  const formattedCode = inputCode.trim().toUpperCase();
+  if (VALID_LICENSES.includes(formattedCode)) {
+    // Simpan lisensi dan buka studio asli
+    localStorage.setItem('wonk_active_license', formattedCode);
+    openStudio();
+  } else {
+    alert("Kode lisensi tidak valid! Silakan hubungi Admin WhatsApp.");
+  }
+}

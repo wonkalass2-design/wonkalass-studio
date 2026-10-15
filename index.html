@@ -1,22 +1,139 @@
-// Daftar Kode Lisensi Unik Pembeli
-const VALID_LICENSES = [
-  "WONK-BUYER01",
-  "WONK-BUYER02",
-  "WONK-BUYER03",
-  "WONK-BUYER04",
-  "WONK-BUYER05",
-  "WONKALASS2026",
-  "WONK-OKTOBER"
-];
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wonk Alass Studio Prompt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
 
-// Pengecekan saat tombol login diklik
-function checkLicense(inputCode) {
-  const formattedCode = inputCode.trim().toUpperCase();
-  if (VALID_LICENSES.includes(formattedCode)) {
-    // Simpan lisensi dan buka studio asli
-    localStorage.setItem('wonk_active_license', formattedCode);
-    openStudio();
-  } else {
-    alert("Kode lisensi tidak valid! Silakan hubungi Admin WhatsApp.");
-  }
-}
+    <!-- Screen Login / Lisensi -->
+    <div id="login-screen" class="max-w-md w-full bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
+        <h1 class="text-2xl font-bold text-center text-emerald-400 mb-2">Wonk Alass Studio</h1>
+        <p class="text-slate-400 text-sm text-center mb-6">Akses Generator Prompt Kreatif</p>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Kode Lisensi</label>
+                <input type="text" id="license-input" placeholder="Masukkan kode lisensi Anda" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
+            </div>
+            <button onclick="handleLogin()" class="w-full bg-emerald-500 hover:bg-emerald-600 font-bold py-2 rounded-lg transition duration-200">Masuk Aplikasi</button>
+        </div>
+    </div>
+
+    <!-- Screen Utama Studio -->
+    <div id="studio-screen" class="hidden max-w-2xl w-full bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+            <h2 class="text-xl font-bold text-emerald-400">Studio Prompt Generator</h2>
+            <button onclick="logout()" class="text-xs text-rose-400 hover:underline">Keluar</button>
+        </div>
+
+        <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Prompt Utama</label>
+            <textarea id="user-prompt" rows="4" placeholder="Tuliskan ide prompt Anda di sini..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500"></textarea>
+        </div>
+
+        <button id="btn-polish" onclick="enhancePromptWithAI()" class="w-full bg-indigo-600 hover:bg-indigo-700 font-semibold py-2 rounded-lg transition duration-200 flex items-center justify-center gap-2">
+            <span>✨ Polish dengan AI Pro</span>
+        </button>
+
+        <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Hasil Prompt AI</label>
+            <div id="ai-result" class="min-h-[100px] w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-300 text-sm whitespace-pre-wrap">Hasil penyempurnaan AI akan muncul di sini...</div>
+        </div>
+    </div>
+
+    <script>
+        // Daftar Kode Lisensi Unik Pembeli
+        const VALID_LICENSES = [
+            "WONK-BUYER01",
+            "WONK-BUYER02",
+            "WONK-BUYER03",
+            "WONK-BUYER04",
+            "WONK-BUYER05",
+            "WONKALASS2026",
+            "WONK-OKTOBER"
+        ];
+
+        // Jalankan pengecekan saat halaman dibuka
+        window.onload = function() {
+            const activeLicense = localStorage.getItem('wonk_active_license');
+            if (activeLicense && VALID_LICENSES.includes(activeLicense)) {
+                openStudio();
+            }
+        };
+
+        function handleLogin() {
+            const inputCode = document.getElementById('license-input').value;
+            checkLicense(inputCode);
+        }
+
+        function checkLicense(inputCode) {
+            const formattedCode = inputCode.trim().toUpperCase();
+            if (VALID_LICENSES.includes(formattedCode)) {
+                localStorage.setItem('wonk_active_license', formattedCode);
+                openStudio();
+            } else {
+                alert("Kode lisensi tidak valid! Silakan hubungi Admin WhatsApp.");
+            }
+        }
+
+        function openStudio() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('studio-screen').classList.remove('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('wonk_active_license');
+            document.getElementById('studio-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        // Fungsi Pemanggilan AI Aman via Cloudflare Server
+        async function enhancePromptWithAI() {
+            const userPromptText = document.getElementById('user-prompt').value;
+            const resultBox = document.getElementById('ai-result');
+            const btnPolish = document.getElementById('btn-polish');
+
+            if (!userPromptText.trim()) {
+                alert("Silakan isi prompt terlebih dahulu!");
+                return;
+            }
+
+            btnPolish.disabled = true;
+            btnPolish.innerText = "⏳ Memproses dengan AI...";
+            resultBox.innerText = "Sistem sedang mengolah prompt Anda...";
+
+            try {
+                const response = await fetch('/api/gemini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Tingkatkan dan sempurnakan prompt berikut agar menjadi prompt AI yang sangat detail, profesional, dan efektif:\n\n${userPromptText}`
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    resultBox.innerText = data.candidates[0].content.parts[0].text;
+                } else if (data.error) {
+                    resultBox.innerText = "Error: " + data.error;
+                } else {
+                    resultBox.innerText = "Gagal mendapatkan respon dari AI. Pastikan API Key di Cloudflare sudah diatur.";
+                }
+            } catch (err) {
+                resultBox.innerText = "Terjadi kesalahan jaringan: " + err.message;
+            } finally {
+                btnPolish.disabled = false;
+                btnPolish.innerHTML = "<span>✨ Polish dengan AI Pro</span>";
+            }
+        }
+    </script>
+</body>
+</html>
